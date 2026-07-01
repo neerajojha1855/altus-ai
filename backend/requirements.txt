@@ -1,0 +1,16 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+flask-cors
+
+psycopg2-binary
+
+firebase-admin
+
+cloudinary
+PyMuPDF
+
+python-dotenv
+
+pytest
+pytest-flask
