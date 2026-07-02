@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS"))
-firebase_admin.initialize_app(cred)
+if not firebase_admin._apps:
+    cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS"))
+    firebase_admin.initialize_app(cred)
 
 def require_auth(f):
     @wraps(f)
