@@ -1,7 +1,9 @@
 import requests
 from flask import Blueprint, jsonify, request
+from sqlalchemy.orm import joinedload
 from .models import db, User, Class
 from .auth import require_auth
+from .notifications import send_remainder_email
 
 AGENT_URL = "http://localhost:5001"
 
@@ -86,4 +88,44 @@ def submit_quiz(quiz_id):
         "message": "Submitted",
         "score": total_score,
         "feedback": feedback
+    })
+
+@api.route('/assignment/<int:assignment_id>/tracking', methods=["GET"])
+@require_auth
+def get_submission_tracking(assignment_id):
+    assignment = Assignment.query.get(assignment_id)
+    class_id = assignment.class_id
+
+    students = User.query.join(student_classes).filter(student_classes.c.class_id == class_id).all()
+
+    quiz = Quiz.query.filter_by(assignment_id=assignment_id).first()
+    submissions = Submission.query.filter_by(quiz_id=quiz.id).all()
+    submitted_student_ids = {s.student_id for s in submissions}
+
+    tracking_data = []
+    for student in students:
+        status = "submitted" if student.id in submitted_student_ids else "missing"
+        tracking_data.append({
+            "student_id": student.id,
+            "student_name": student.name,
+            "student_email": student.email,
+            "status": status
+        })
+    
+    return jsonify(tracking_data)
+
+@api.route('/assignments/<int:assigment_id>/remind', methods=["POST"])
+@require_auth
+def send_remainder(assigment_id):
+    data = request.json
+    student_ids = data.get('student_ids', [])
+
+    assignemnt = Assignment.query.get(assigment_id)
+    students = User.query.filter_by(User.id.in_(student_ids)).all()
+
+    for student in students:
+        send_remainder_email(student.email, student.name, assignment_title)
+    
+    return jsonify({
+        "message": f"Sent {len(students)} remainders."
     })
