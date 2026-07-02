@@ -1,0 +1,20 @@
+<!-- Navbar -->
+<nav class="bg-neo-cyan border-b-4 border-black p-4 flex justify-between items-center shadow-neo-sm sticky top-0 z-50">
+    <div class="text-3xl font-black uppercase tracking-tighter">
+        <a href="{{ url_for('views.index') }}" class="hover:underline decoration-4 underline-offset-4">Altus AI</a>
+    </div>
+    <div class="space-x-4 font-bold uppercase tracking-wider text-sm flex items-center">
+        <!-- Unauthenticated Links -->
+        <div id="nav-unauth" class="space-x-4">
+            <a href="{{ url_for('views.login') }}" class="hover:bg-neo-pink hover:text-white px-3 py-2 border-4 border-transparent hover:border-black transition-colors">Login</a>
+            <a href="{{ url_for('views.signup') }}" class="bg-neo-yellow px-5 py-2 border-4 border-black shadow-neo-sm inline-block hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all">Sign Up</a>
+        </div>
+        
+        <!-- Authenticated Links -->
+        <div id="nav-auth" class="space-x-4 hidden">
+            <a href="{{ url_for('views.dashboard') }}" class="hover:underline">Dashboard</a>
+            <a href="{{ url_for('views.edit_profile') }}" class="hover:bg-neo-cyan px-3 py-2 border-4 border-transparent hover:border-black transition-colors">Edit 👤</a>
+            <button id="logout-btn" class="bg-neo-pink text-white px-5 py-2 border-4 border-black shadow-neo-sm inline-block hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all cursor-pointer">Logout 🚪</button>
+        </div>
+    </div>
+</nav>

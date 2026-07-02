@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-12 bg-white border-4 border-black shadow-neo-lg p-8 relative">
+    
+    <h1 class="text-4xl font-black mb-8 uppercase tracking-tighter text-center bg-neo-pink text-white border-4 border-black py-3 px-2 inline-block -rotate-2 shadow-neo-sm mb-10 w-full">Sign Up</h1>
+    
+    <form id="signup-form" class="space-y-6">
+        <div>
+            <label class="block font-bold mb-2 uppercase text-sm tracking-widest" for="role">I am a...</label>
+            <div class="relative">
+                <select id="role" name="role" class="w-full border-4 border-black p-4 text-lg font-medium focus:outline-none focus:ring-4 focus:ring-neo-cyan bg-white transition-shadow appearance-none cursor-pointer" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="administrator">Administrator</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-black">
+                    <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label class="block font-bold mb-2 uppercase text-sm tracking-widest" for="name">Full Name</label>
+            <input type="text" id="name" name="name" class="w-full border-4 border-black p-4 text-lg font-medium focus:outline-none focus:ring-4 focus:ring-neo-cyan bg-white transition-shadow" placeholder="Jane Doe" required>
+        </div>
+        
+        <div>
+            <label class="block font-bold mb-2 uppercase text-sm tracking-widest" for="email">Email</label>
+            <input type="email" id="email" name="email" class="w-full border-4 border-black p-4 text-lg font-medium focus:outline-none focus:ring-4 focus:ring-neo-cyan bg-white transition-shadow" placeholder="jane@school.edu" required>
+        </div>
+        
+        <div>
+            <label class="block font-bold mb-2 uppercase text-sm tracking-widest" for="password">Password</label>
+            <input type="password" id="password" name="password" class="w-full border-4 border-black p-4 text-lg font-medium focus:outline-none focus:ring-4 focus:ring-neo-cyan bg-white transition-shadow" placeholder="••••••••" required>
+        </div>
+        
+        <button type="submit" class="w-full bg-neo-cyan text-black font-black border-4 border-black shadow-neo-md py-4 text-xl uppercase tracking-widest hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm active:translate-x-[6px] active:translate-y-[6px] active:shadow-none transition-all mt-4">
+            Create Account
+        </button>
+        
+        <div class="relative flex items-center py-2">
+            <div class="flex-grow border-t-4 border-black"></div>
+            <span class="flex-shrink-0 mx-4 font-bold uppercase tracking-widest">OR</span>
+            <div class="flex-grow border-t-4 border-black"></div>
+        </div>
+
+        <button type="button" id="google-sso-btn" class="w-full flex items-center justify-center gap-3 bg-white text-black font-black border-4 border-black shadow-neo-md py-4 text-xl uppercase tracking-widest hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm active:translate-x-[6px] active:translate-y-[6px] active:shadow-none transition-all">
+            <svg class="w-6 h-6" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+    </form>
+
+    <div class="mt-8 text-center font-bold">
+        Already have an account? <a href="{{ url_for('views.login') }}" class="underline decoration-4 decoration-neo-yellow hover:bg-neo-yellow px-1 transition-colors">Log in</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function syncUserWithBackend(firebaseUser, role, name) {
+        const token = await firebaseUser.getIdToken();
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                email: firebaseUser.email,
+                name: name || firebaseUser.displayName || 'User',
+                role: role
+            })
+        });
+
+        if (response.ok) {
+            window.location.href = "{{ url_for('views.dashboard') }}";
+        } else {
+            alert('Failed to sync user with backend.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('signup-form');
+        const googleBtn = document.getElementById('google-sso-btn');
+        const roleSelect = document.getElementById('role');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const role = roleSelect.value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!role) {
+                alert('Please select a role.');
+                return;
+            }
+
+            try {
+                const userCredential = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                await syncUserWithBackend(userCredential.user, role, name);
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        });
+
+        googleBtn.addEventListener('click', async () => {
+            const role = roleSelect.value;
+            if (!role) {
+                alert('Please select a role before continuing with Google.');
+                roleSelect.focus();
+                return;
+            }
+
+            try {
+                const userCredential = await window.signInWithPopup(window.firebaseAuth, window.firebaseProvider);
+                await syncUserWithBackend(userCredential.user, role, null);
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        });
+    });
+</script>
+{% endblock %}

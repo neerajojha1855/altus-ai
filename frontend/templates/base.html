@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altus AI</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+
+    <script>
+        window.env = {
+            FIREBASE_API_KEY: "{{ FIREBASE_API_KEY }}",
+            FIREBASE_AUTH_DOMAIN: "{{ FIREBASE_AUTH_DOMAIN }}",
+            FIREBASE_PROJECT_ID: "{{ FIREBASE_PROJECT_ID }}"
+        };
+    </script>
+</head>
+<body class="text-black min-h-screen flex flex-col">
+    {% include "components/_navbar.html" %}
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 sm:p-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+
+    <script type="module" src="{{ url_for('static', filename='js/firebase-init.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

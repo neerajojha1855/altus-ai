@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #f0f0f0; /* Slight gray background makes the white cards pop aggressively */
+    background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+    background-size: 20px 20px;
+}
