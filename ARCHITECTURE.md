@@ -6,9 +6,8 @@ Altus AI utilizes a modern decoupled architecture with a reactive frontend and a
 ## Tech Stack
 
 ### Frontend (Client-Side)
-- **Framework:** React (with Next.js for SSR optionality)
+- **Framework:** HTML, JavaScript
 - **Styling:** Tailwind CSS for rapid, consistent, modern UI design
-- **State Management:** Zustand
 
 ### Backend (API & Business Logic)
 - **Framework:** Python / Flask

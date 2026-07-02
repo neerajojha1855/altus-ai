@@ -10,7 +10,7 @@ Altus AI is an AI-powered smart classroom assistant designed to reduce the admin
 
 ## Tech Stack
 
-- **Frontend:** React, Tailwind CSS, Zustand
+- **Frontend:** HTML, Tailwind CSS
 - **Backend:** Python, Flask, Minimax-M3 (via Hugging Face)
 - **Database:** PostgreSQL (Neon)
 - **Auth & Storage:** Firebase Authentication and Cloudinary Storage

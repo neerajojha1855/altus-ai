@@ -54,6 +54,7 @@ package-lock.json.bak
 frontend/dist/
 frontend/build/
 frontend/.vite/
+frontend/.next/
 
 # ─── Logs ──────────────────────────────────────────────────────────────────────
 logs/
@@ -67,7 +68,10 @@ pids/
 dump.rdb
 *.rdb
 
-
+firebase_credentials.json
+Altus_AI_Pitch_deck.pptx
+DCRUST Full Stack Hackathon 2026.pdf
+X-Stack_Rescuing_the_Educator's_Time_DCRUSTHackathon2026.pdf
 
 # ─── Docker ────────────────────────────────────────────────────────────────────
 .docker/

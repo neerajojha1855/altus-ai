@@ -29,9 +29,8 @@ This solution is highly feasible using modern Large Language Models (LLMs) for n
 To build a highly responsive, scalable, and modern application for this project, I recommend the following tech stack:
 
 ### 1. Frontend (User Interface)
-* **Framework:** **Vue.js** (optionally with **Nuxt.js** for SSR) - Vue offers an incredibly approachable, performant, and reactive foundation for building interactive web interfaces. It's known for its excellent documentation and smooth learning curve.
+* **Framework:** HTML, JavaScript
 * **Styling:** **Tailwind CSS** - A utility-first CSS framework that allows for rapid UI development without leaving your HTML/Vue templates. It ensures a consistent design system and makes it trivial to implement modern features like dark mode and responsive layouts.
-* **State Management:** **Pinia** - The modern, official state management library for Vue. It's lightweight, intuitive, and perfect for managing teacher dashboards and student states.
 
 ### 2. Backend (API & Logic)
 * **Framework:** **Flask** - A lightweight and flexible Python web framework. It is perfect for building agile microservices and allows developers fine-grained control over components like routing, database connections, and API structure without unnecessary bloat.
