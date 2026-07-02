@@ -25,3 +25,19 @@ class Assignment(db.Model):
     title = db.Column(db.String(200), nullable=False)
     due_date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Quiz(db.Model):
+    __tablename__ = 'quizzes'
+    id = db.Column(db.Integer, primary_key=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey('assignments.id'), nullable=False)
+    questions_json = db.Column(db.JSON, nullable=False) # Stores MCQ & Short Answer structure
+
+class Submission(db.Model):
+    __tablename__ = 'submissions'
+    id = db.Column(db.Integer, primary_key=True)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    answers_json = db.Column(db.JSON, nullable=False)
+    score = db.Column(db.Float, nullable=True)
+    ai_feedback = db.Column(db.JSON, nullable=True)
+    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
