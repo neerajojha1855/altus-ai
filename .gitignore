@@ -26,6 +26,9 @@ coverage.xml
 dist/
 build/
 
+grader.py
+gradebook.jsx
+
 # Virtual environments
 venv/
 .venv/
