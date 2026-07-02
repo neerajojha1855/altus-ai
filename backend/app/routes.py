@@ -1,13 +1,47 @@
 import requests
 from flask import Blueprint, jsonify, request
 from sqlalchemy.orm import joinedload
-from .models import db, User, Class
+from functools import wraps
+from .models import db, User, Class, Quiz, Submission, Assignment
 from .auth import require_auth
 from .notifications import send_remainder_email
 
 AGENT_URL = "http://localhost:5001"
 
 api = Blueprint('api', __name__)
+
+def require_role(roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            firebase_uid = request.user.get('uid')
+            user = User.query.filter_by(firebase_uid=firebase_uid).first()
+            if not user or user.role not in roles:
+                return jsonify({"error": f"Unauthorized. Requires role: {', '.join(roles)}"}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+@api.route('/users', methods=["POST"])
+@require_auth
+def create_user():
+    firebase_uid = request.user.get('uid')
+    data = request.json
+    
+    user = User.query.filter_by(firebase_uid=firebase_uid).first()
+    if user:
+        return jsonify({"message": "User already exists", "id": user.id}), 200
+        
+    new_user = User(
+        firebase_uid=firebase_uid,
+        email=data.get('email'),
+        name=data.get('name', 'User'),
+        role=data.get('role', 'student')
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    
+    return jsonify({"message": "User created", "id": new_user.id}), 201
 
 @api.route('/users/me', methods=["GET"])
 @require_auth
@@ -21,11 +55,13 @@ def get_me():
     return jsonify({
         "id": user.id,
         "email": user.email,
+        "name": user.name,
         "role": user.role
     })
 
 @api.route('/classes', methods=["POST"])
 @require_auth
+@require_role(['teacher', 'administrator'])
 def create_class():
     data = request.json
     firebase_uid = request.user.get('uid')
@@ -42,6 +78,7 @@ def create_class():
 
 @api.route('/quizzes/<int:quiz_id>/submit', methods=['POST'])
 @require_auth
+@require_role(['student'])
 def submit_quiz(quiz_id):
     student_uid = request.user.get('uid')
     student = User.query.filter_by(firebase_uid=student_uid).first()
@@ -92,6 +129,7 @@ def submit_quiz(quiz_id):
 
 @api.route('/assignment/<int:assignment_id>/tracking', methods=["GET"])
 @require_auth
+@require_role(['teacher', 'administrator'])
 def get_submission_tracking(assignment_id):
     assignment = Assignment.query.get(assignment_id)
     class_id = assignment.class_id
@@ -116,6 +154,7 @@ def get_submission_tracking(assignment_id):
 
 @api.route('/assignments/<int:assigment_id>/remind', methods=["POST"])
 @require_auth
+@require_role(['teacher', 'administrator'])
 def send_remainder(assigment_id):
     data = request.json
     student_ids = data.get('student_ids', [])

@@ -10,7 +10,11 @@ from .models import db
 load_dotenv()
 
 def create_app():
-    app = Flask(__name__)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    template_dir = os.path.join(BASE_DIR, 'frontend', 'templates')
+    static_dir = os.path.join(BASE_DIR, 'frontend', 'static')
+
+    app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
     CORS(app)
 
     # Configure database
@@ -31,6 +35,17 @@ def create_app():
 
     # Register blueprints
     from .routes import api as api_blueprint
+    from .views import views as views_blueprint
+    
     app.register_blueprint(api_blueprint, url_prefix='/api')
+    app.register_blueprint(views_blueprint)
+
+    @app.context_processor
+    def inject_firebase_config():
+        return dict(
+            FIREBASE_API_KEY=os.getenv('FIREBASE_API_KEY'),
+            FIREBASE_AUTH_DOMAIN=os.getenv('FIREBASE_AUTH_DOMAIN'),
+            FIREBASE_PROJECT_ID=os.getenv('FIREBASE_PROJECT_ID')
+        )
 
     return app
