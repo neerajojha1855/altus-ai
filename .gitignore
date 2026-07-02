@@ -64,6 +64,9 @@ pids/
 *.pid
 *.seed
 
+# Firebase Credentials
+firebase_credentials.json
+
 # ─── Database & Cache ──────────────────────────────────────────────────────────
 dump.rdb
 *.rdb

@@ -1,0 +1,6 @@
+Flask
+
+huggingface_hub
+requests
+
+python-dotenv

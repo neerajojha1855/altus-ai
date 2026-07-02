@@ -18,9 +18,15 @@ Altus AI is an AI-powered smart classroom assistant designed to reduce the admin
 
 ## Project Structure
 
-- `PRD.md`: Detailed Product Requirements.
-- `ARCHITECTURE.md`: System design and technology stack details.
-- `educator_time_proposal.md`: Original project pitch and vision.
+```
+altus-ai/
+├── frontend/        # React + Next.js UI (Teacher & Student dashboards)
+├── backend/         # Flask REST API, DB models, Auth middleware
+├── altus-agent/     # AI/LLM microservice (quiz generation, auto-grading)
+├── PRD.md           # Product Requirements Document
+├── ARCHITECTURE.md  # System design and tech stack details
+└── README.md
+```
 
 ## Getting Started
 *(Instructions for local setup will be added as the codebase is initialized)*
